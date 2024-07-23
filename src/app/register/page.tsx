@@ -1,10 +1,10 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
-import login from "../api/auth/login";
+import register from "../api/auth/register";
 
 export default function Login() {
-  const [error, dispatch] = useFormState(login, undefined);
+  const [error, dispatch] = useFormState(register, undefined);
 
   return (
     <div className="w-screen h-screen flex items-center justify-center">
@@ -13,10 +13,19 @@ export default function Login() {
           action={dispatch}
           className="w-full h-full flex flex-col justify-between"
         >
-          <h1 className="text-3xl font-semibold text-center m-0">
-            Log in to your account
-          </h1>
+          <h1 className="text-3xl font-semibold text-center m-0">Register</h1>
           <div>
+            <label htmlFor="name" className="text-lg">
+              Your name
+            </label>
+            <br />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="John Doe"
+              className="border border-gray-300 rounded-lg px-2 py-1 w-full h-11 my-3"
+            />
             <label htmlFor="email" className="text-lg">
               Your email
             </label>
@@ -28,7 +37,29 @@ export default function Login() {
               placeholder="john.doe@example.com"
               className="border border-gray-300 rounded-lg px-2 py-1 w-full h-11 my-3"
             />
-            <label htmlFor="email" className="text-lg">
+            <label htmlFor="phoneNumber" className="text-lg">
+              Your phone number
+            </label>
+            <br />
+            <input
+              type="text"
+              id="phoneNumber"
+              name="phoneNumber"
+              placeholder="+234 123 456 7890"
+              className="border border-gray-300 rounded-lg px-2 py-1 w-full h-11 my-3"
+            />
+            <label htmlFor="address" className="text-lg">
+              Your address
+            </label>
+            <br />
+            <input
+              type="text"
+              id="address"
+              name="address"
+              placeholder="123, Main Street, City"
+              className="border border-gray-300 rounded-lg px-2 py-1 w-full h-11 my-3"
+            />
+            <label htmlFor="password" className="text-lg">
               Password
             </label>
             <br />
@@ -39,15 +70,26 @@ export default function Login() {
               placeholder="********"
               className="border border-gray-300 rounded-lg px-2 py-1 w-full h-11 my-3"
             />
+            <label htmlFor="repPassword" className="text-lg">
+              Repeat Password
+            </label>
+            <br />
+            <input
+              type="password"
+              id="repPassword"
+              name="repPassword"
+              placeholder="********"
+              className="border border-gray-300 rounded-lg px-2 py-1 w-full h-11 my-3"
+            />
             {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
 
           <div>
             <Button />
             <p className="text-center mt-3 text-gray-500">
-              Don't have an account?{" "}
-              <a href="/register" className="text-blue-500 hover:underline">
-                Sign up
+              Already have an account?{" "}
+              <a href="/login" className="text-blue-500 hover:underline">
+                Log in
               </a>
             </p>
           </div>
@@ -75,7 +117,7 @@ function Button() {
           onClick={handleClick}
           className="bg-blue-500 text-white rounded-lg w-full h-11 my-3"
         >
-          Log in
+          Register
         </button>
       ) : (
         <button

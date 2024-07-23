@@ -10,7 +10,7 @@ export async function setSession(sessionData: any) {
 }
 
 export async function getSession() {
-  return cookies().get("session");
+  return cookies().get("session")?.value;
 }
 
 export async function removeSession() {
