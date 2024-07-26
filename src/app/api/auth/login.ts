@@ -29,7 +29,7 @@ export default async function login(
 
     const user = users[0];
 
-    if (bcryptjs.compareSync(password, user.password)) {
+    if (bcryptjs.compareSync(user.password, password)) {
       return "Email or password is incorrect";
     }
 
