@@ -21,6 +21,10 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
+    if (!pathname.startsWith("/dashboard")) {
+      return;
+    }
+
     let fct = async () => {
       let userData = await getUserData();
       if (!userData) {

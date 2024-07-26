@@ -18,8 +18,6 @@ export default async function getUserData() {
 
   let userData = jwt.verify(session, process.env.JWT_SECRET || "");
 
-  console.log(userData);
-
   if (!userData) {
     await removeSession();
     return null;

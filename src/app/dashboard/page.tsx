@@ -11,7 +11,7 @@ export default function Dashboard() {
   return (
     <div>
       <h1>Dashboard</h1>
-      <p>{JSON.stringify(user.user)}</p>
+      <p>Welcome, {user.user.fullName}</p>
     </div>
   );
 }
