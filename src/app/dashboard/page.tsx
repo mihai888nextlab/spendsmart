@@ -2,6 +2,8 @@
 
 import { use, useEffect } from "react";
 import { useUser } from "../Hooks/UserContext";
+import DashboardHeader from "../Components/DashboardHeader";
+import DashboardSidebar from "../Components/DashboardSidebar";
 
 export default function Dashboard() {
   const user = useUser();
@@ -10,8 +12,12 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1>Dashboard</h1>
-      <p>Welcome, {user.user.fullName}</p>
+      <DashboardHeader />
+
+      <main className="grid w-full h-screen pt-20 grid-cols-[17.5rem_1fr] grid-rows-1">
+        <DashboardSidebar />
+        <div className="bg-gray-100"></div>
+      </main>
     </div>
   );
 }
