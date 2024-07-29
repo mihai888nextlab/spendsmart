@@ -10,7 +10,9 @@ export default function Income() {
 
   return (
     <div>
-      {showModal === "addIncome" && <AddIncomeModal />}
+      {showModal === "addIncome" && (
+        <AddIncomeModal onClose={() => setShowModal("")} />
+      )}
 
       <DashboardHeader />
 

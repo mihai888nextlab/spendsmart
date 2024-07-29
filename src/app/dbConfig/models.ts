@@ -23,8 +23,34 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+const incomeSchema = new mongoose.Schema({
+  source: {
+    type: String,
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+  date_received: {
+    type: Date,
+    required: true,
+  },
+  frequency: {
+    type: String,
+    required: true,
+  },
+  uid: {
+    type: String,
+    required: true,
+  },
+});
+
 const userModel =
   mongoose.models.spendsmart_users ||
   mongoose.model("spendsmart_users", userSchema);
+const incomeModel =
+  mongoose.models.spendsmart_incomes ||
+  mongoose.model("spendsmart_incomes", incomeSchema);
 
-export { userModel };
+export { userModel, incomeModel };
