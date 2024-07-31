@@ -7,16 +7,24 @@ import {
   useEffect,
   useState,
 } from "react";
-import { User } from "../types";
+import { Income, User } from "../types";
 import getUserData from "../api/auth/getUserData";
 import { usePathname, useRouter } from "next/navigation";
 
 const UserContext = createContext({
   user: {} as User,
+  loading: true,
+  setLoading: (loading: boolean) => {},
+  incomeData: [] as Income[],
+  setIncomeData: (data: Income[]) => {},
 });
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User>({} as User);
+  const [loading, setLoading] = useState(true);
+
+  const [incomeData, setIncomeData] = useState<Income[]>([]);
+
   const pathname = usePathname();
   const router = useRouter();
 
@@ -26,6 +34,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     }
 
     let fct = async () => {
+      setLoading(true);
       let userData = await getUserData();
       if (!userData) {
         router.push("/login");
@@ -33,13 +42,18 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       }
 
       setUser(JSON.parse(userData));
+      setLoading(false);
     };
 
     fct();
   }, [pathname]);
 
   return (
-    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+    <UserContext.Provider
+      value={{ user, loading, setLoading, incomeData, setIncomeData }}
+    >
+      {children}
+    </UserContext.Provider>
   );
 };
 

@@ -1,12 +1,38 @@
 "use client";
 
+import { getIncomes } from "@/app/api/income/income";
 import DashboardHeader from "@/app/Components/DashboardHeader";
 import DashboardSidebar from "@/app/Components/DashboardSidebar";
 import AddIncomeModal from "@/app/Components/Modals/AddIncomeModal";
-import { useState } from "react";
+import { useUser } from "@/app/Hooks/UserContext";
+import { use, useEffect, useState } from "react";
 
 export default function Income() {
+  const user = useUser();
+
   const [showModal, setShowModal] = useState("");
+
+  useEffect(() => {
+    console.log(user.user);
+    if (!user.user._id) {
+      return;
+    }
+
+    let fct = async () => {
+      user.setLoading(true);
+      let incomeData = await getIncomes(user.user._id);
+      console.log(incomeData);
+
+      if (incomeData == null) {
+        return;
+      }
+
+      user.setIncomeData(incomeData);
+      user.setLoading(false);
+    };
+
+    fct();
+  }, [user.user]);
 
   return (
     <div>
@@ -52,7 +78,7 @@ export default function Income() {
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
-                    stroke-width="0"
+                    strokeWidth="0"
                     viewBox="0 0 20 20"
                     className="text-2xl"
                     height="1em"
@@ -60,9 +86,9 @@ export default function Income() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     ></path>
                   </svg>
                 </a>
@@ -74,7 +100,7 @@ export default function Income() {
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
-                    stroke-width="0"
+                    strokeWidth="0"
                     viewBox="0 0 20 20"
                     className="text-2xl"
                     height="1em"
@@ -82,9 +108,9 @@ export default function Income() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     ></path>
                   </svg>
                 </a>
@@ -96,7 +122,7 @@ export default function Income() {
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
-                    stroke-width="0"
+                    strokeWidth="0"
                     viewBox="0 0 20 20"
                     className="text-2xl"
                     height="1em"
@@ -104,9 +130,9 @@ export default function Income() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     ></path>
                   </svg>
                 </a>
@@ -118,7 +144,7 @@ export default function Income() {
                   <svg
                     stroke="currentColor"
                     fill="currentColor"
-                    stroke-width="0"
+                    strokeWidth="0"
                     viewBox="0 0 20 20"
                     className="text-2xl"
                     height="1em"
@@ -139,7 +165,7 @@ export default function Income() {
                     <svg
                       stroke="currentColor"
                       fill="currentColor"
-                      stroke-width="0"
+                      strokeWidth="0"
                       viewBox="0 0 448 512"
                       className="mr-3 text-sm"
                       height="1em"
@@ -172,91 +198,94 @@ export default function Income() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                <tr
-                  data-testid="table-row-element"
-                  className="hover:bg-gray-100"
-                >
-                  <td className="px-6 py-4 w-4 p-4">
-                    <input
-                      className="h-4 w-4 rounded border border-gray-300 bg-gray-100 focus:ring-2 focus:ring-blue-500"
-                      type="checkbox"
-                    />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap p-4 text-sm font-normal text-gray-500">
-                    <div className="text-base font-semibold text-gray-900">
-                      Education Dashboard
-                    </div>
-                    <div className="text-sm font-normal text-gray-500">
-                      Html templates
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap p-4 text-base font-medium text-gray-900">
-                    Angular
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap p-4 text-base font-medium text-gray-900">
-                    #194556
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap p-4 text-base font-medium text-gray-900">
-                    $149
-                  </td>
-                  <td className="px-6 py-4 space-x-2 whitespace-nowrap p-4">
-                    <div className="flex items-center gap-x-3">
-                      <button
-                        className="text-white
+                {user.incomeData.map((income, i) => (
+                  <tr
+                    data-testid="table-row-element"
+                    className="hover:bg-gray-100"
+                    key={i}
+                  >
+                    <td className="px-6 py-4 w-4 p-4">
+                      <input
+                        className="h-4 w-4 rounded border border-gray-300 bg-gray-100 focus:ring-2 focus:ring-blue-500"
+                        type="checkbox"
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap p-4 text-sm font-normal text-gray-500">
+                      <div className="text-base font-semibold text-gray-900">
+                        {income.source}
+                      </div>
+                      <div className="text-sm font-normal text-gray-500">
+                        {income.uid}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap p-4 text-base font-medium text-gray-900">
+                      {income.amount}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap p-4 text-base font-medium text-gray-900">
+                      {income.date_received.toString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap p-4 text-base font-medium text-gray-900">
+                      {income.frequency}
+                    </td>
+                    <td className="px-6 py-4 space-x-2 whitespace-nowrap p-4">
+                      <div className="flex items-center gap-x-3">
+                        <button
+                          className="text-white
                 bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 focus:!ring-2 
                 p-0 font-medium rounded-lg"
-                        type="button"
-                      >
-                        <span className="flex items-center rounded-md text-sm px-3 py-2">
-                          <svg
-                            stroke="currentColor"
-                            fill="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 20 20"
-                            className="mr-2 text-lg"
-                            height="1em"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
-                            <path
-                              fill-rule="evenodd"
-                              d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                              clip-rule="evenodd"
-                            ></path>
-                          </svg>
-                          Edit item
-                        </span>
-                      </button>
-                      <button
-                        className="text-white bg-red-700 border border-transparent hover:bg-red-800 
+                          type="button"
+                        >
+                          <span className="flex items-center rounded-md text-sm px-3 py-2">
+                            <svg
+                              stroke="currentColor"
+                              fill="currentColor"
+                              strokeWidth="0"
+                              viewBox="0 0 20 20"
+                              className="mr-2 text-lg"
+                              height="1em"
+                              width="1em"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+                              <path
+                                fillRule="evenodd"
+                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                clipRule="evenodd"
+                              ></path>
+                            </svg>
+                            Edit item
+                          </span>
+                        </button>
+                        <button
+                          className="text-white bg-red-700 border border-transparent hover:bg-red-800 
                  focus:ring-red-300 disabled:hover:bg-red-800
                   focus:!ring-2 p-0 font-medium rounded-lg"
-                        type="button"
-                      >
-                        <span className="flex items-center rounded-md text-sm px-3 py-2">
-                          <svg
-                            stroke="currentColor"
-                            fill="currentColor"
-                            stroke-width="0"
-                            viewBox="0 0 20 20"
-                            className="mr-2 text-lg"
-                            height="1em"
-                            width="1em"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                              clip-rule="evenodd"
-                            ></path>
-                          </svg>
-                          Delete item
-                        </span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                          type="button"
+                        >
+                          <span className="flex items-center rounded-md text-sm px-3 py-2">
+                            <svg
+                              stroke="currentColor"
+                              fill="currentColor"
+                              strokeWidth="0"
+                              viewBox="0 0 20 20"
+                              className="mr-2 text-lg"
+                              height="1em"
+                              width="1em"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clipRule="evenodd"
+                              ></path>
+                            </svg>
+                            Delete item
+                          </span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

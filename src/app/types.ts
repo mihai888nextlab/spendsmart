@@ -6,4 +6,13 @@ interface User {
   address: string;
 }
 
-export type { User };
+interface Income {
+  _id: string;
+  source: string;
+  amount: number;
+  date_received: Date;
+  frequency: string;
+  uid: string;
+}
+
+export type { User, Income };

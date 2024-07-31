@@ -1,3 +1,4 @@
+import { addIncome } from "@/app/api/income/income";
 import ModalTemplate from "./ModalTemplate";
 
 interface Props {
@@ -5,6 +6,22 @@ interface Props {
 }
 
 export default function AddIncomeModal(props: Props) {
+  const handleSave = async (formData: FormData) => {
+    const incomeSource = formData.get("Income source") as string;
+    const incomeAmount = Number(formData.get("Income amount") as string);
+    const dateReceived = new Date(formData.get("Date received") as string);
+    const frequency = formData.get("Frequency") as string;
+    const incomeDescription = formData.get("Income description") as string;
+
+    await addIncome(
+      incomeSource,
+      incomeAmount,
+      dateReceived,
+      frequency,
+      incomeDescription
+    );
+  };
+
   return (
     <ModalTemplate
       title="Add income source"
@@ -42,6 +59,7 @@ export default function AddIncomeModal(props: Props) {
         },
       ]}
       onClose={props.onClose}
+      onSave={handleSave}
     />
   );
 }
