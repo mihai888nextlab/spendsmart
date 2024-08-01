@@ -8,9 +8,13 @@ interface Props {
     options?: string[];
     placeholder: string;
     size: "sm" | "lg";
+    defaultValue?: string | number;
   }[];
   onClose: () => void;
   onSave: (formData: FormData) => void;
+  submitText?: string;
+  invertedSubmitButton?: boolean;
+  children?: React.ReactNode;
 }
 
 export default function ModalTemplate(props: Props) {
@@ -60,6 +64,7 @@ export default function ModalTemplate(props: Props) {
           </button>
         </div>
         <div className="p-6">
+          {props.children}
           <div>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {props.inputs.map((input, i) => (
@@ -76,6 +81,7 @@ export default function ModalTemplate(props: Props) {
                       name={input.inputName}
                       className="block w-full text-sm p-4 rounded-lg border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 mt-1"
                       placeholder={input.placeholder}
+                      defaultValue={input.defaultValue}
                       rows={6}
                     ></textarea>
                   ) : (
@@ -84,6 +90,7 @@ export default function ModalTemplate(props: Props) {
                         {input.inputType == "select" ? (
                           <select
                             name={input.inputName}
+                            defaultValue={input.defaultValue}
                             className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 rounded-lg p-2.5 text-sm"
                           >
                             {input.options?.map((option, i) => (
@@ -95,6 +102,7 @@ export default function ModalTemplate(props: Props) {
                             name={input.inputName}
                             className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500 rounded-lg p-2.5 text-sm"
                             placeholder={input.placeholder}
+                            defaultValue={input.defaultValue}
                             type={input.inputType}
                           />
                         )}
@@ -106,13 +114,19 @@ export default function ModalTemplate(props: Props) {
             </div>
           </div>
         </div>
+
         <div className="flex items-center space-x-2 rounded-b border-gray-200 p-6 border-t">
           <button
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 focus:!ring-2 p-0 font-medium rounded-lg"
+            className={
+              "text-white focus:!ring-2 p-0 font-medium rounded-lg" +
+              (props.invertedSubmitButton
+                ? " bg-red-700 hover:bg-red-800 focus:ring-red-300"
+                : " bg-blue-700 hover:bg-blue-800 focus:ring-blue-300")
+            }
             type="submit"
           >
             <span className="flex items-center rounded-md text-sm px-3 py-2">
-              {props.title}
+              {props.submitText ? props.submitText : props.title}
             </span>
           </button>
         </div>

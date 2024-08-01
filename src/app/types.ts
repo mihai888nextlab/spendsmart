@@ -9,6 +9,7 @@ interface User {
 interface Income {
   _id: string;
   source: string;
+  description: string;
   amount: number;
   date_received: Date;
   frequency: string;

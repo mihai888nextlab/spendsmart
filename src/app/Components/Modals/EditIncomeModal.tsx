@@ -1,17 +1,19 @@
 "use client";
 
-import { addIncome, getIncomes } from "@/app/api/income/income";
+import { Income } from "@/app/types";
 import ModalTemplate from "./ModalTemplate";
 import { useUser } from "@/app/Hooks/UserContext";
+import { getIncomes, updateIncome } from "@/app/api/income/income";
 
 interface Props {
   onClose: () => void;
+  income?: Income;
 }
 
-export default function AddIncomeModal(props: Props) {
+export default function EditIncomeModal(props: Props) {
   const user = useUser();
 
-  const handleSave = async (formData: FormData) => {
+  const handleEdit = async (formData: FormData) => {
     user.setLoading(true);
 
     const incomeSource = formData.get("Income source") as string;
@@ -20,7 +22,12 @@ export default function AddIncomeModal(props: Props) {
     const frequency = formData.get("Frequency") as string;
     const incomeDescription = formData.get("Income description") as string;
 
-    await addIncome(
+    if (!props.income) {
+      return;
+    }
+
+    await updateIncome(
+      props.income?._id,
       incomeSource,
       incomeDescription,
       incomeAmount,
@@ -38,28 +45,30 @@ export default function AddIncomeModal(props: Props) {
     user.setIncomeData(JSON.parse(incomeData));
     user.setLoading(false);
   };
-
   return (
     <ModalTemplate
-      title="Add income source"
+      title="Edit income source"
       inputs={[
         {
           inputName: "Income source",
           inputType: "text",
           placeholder: "Enter income source",
           size: "sm",
+          defaultValue: props.income?.source,
         },
         {
           inputName: "Income amount",
           inputType: "number",
           placeholder: "Enter income amount",
           size: "sm",
+          defaultValue: props.income?.amount,
         },
         {
           inputName: "Date received",
           inputType: "date",
           placeholder: "Enter date received",
           size: "sm",
+          defaultValue: props.income?.date_received.toString(),
         },
         {
           inputName: "Frequency",
@@ -67,16 +76,18 @@ export default function AddIncomeModal(props: Props) {
           options: ["Regular", "Irregular"],
           placeholder: "Enter frequency",
           size: "sm",
+          defaultValue: props.income?.frequency,
         },
         {
           inputName: "Income description",
           inputType: "text",
           placeholder: "Enter income description",
           size: "lg",
+          defaultValue: props.income?.description,
         },
       ]}
       onClose={props.onClose}
-      onSave={handleSave}
+      onSave={handleEdit}
     />
   );
 }

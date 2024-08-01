@@ -3,14 +3,19 @@
 import { getIncomes } from "@/app/api/income/income";
 import DashboardHeader from "@/app/Components/DashboardHeader";
 import DashboardSidebar from "@/app/Components/DashboardSidebar";
+import Loading from "@/app/Components/Loading";
 import AddIncomeModal from "@/app/Components/Modals/AddIncomeModal";
+import DeleteIncomeModal from "@/app/Components/Modals/DeleteIncomeModal";
+import EditIncomeModal from "@/app/Components/Modals/EditIncomeModal";
 import { useUser } from "@/app/Hooks/UserContext";
+import { Income as IncomeType } from "@/app/types";
 import { use, useEffect, useState } from "react";
 
 export default function Income() {
   const user = useUser();
 
   const [showModal, setShowModal] = useState("");
+  const [selectedItem, setSelectedItem] = useState<IncomeType>();
 
   useEffect(() => {
     console.log(user.user);
@@ -21,13 +26,12 @@ export default function Income() {
     let fct = async () => {
       user.setLoading(true);
       let incomeData = await getIncomes(user.user._id);
-      console.log(incomeData);
 
       if (incomeData == null) {
         return;
       }
 
-      user.setIncomeData(incomeData);
+      user.setIncomeData(JSON.parse(incomeData));
       user.setLoading(false);
     };
 
@@ -36,8 +40,22 @@ export default function Income() {
 
   return (
     <div>
+      {user.loading && <Loading />}
+
       {showModal === "addIncome" && (
         <AddIncomeModal onClose={() => setShowModal("")} />
+      )}
+      {showModal === "deleteIncome" && (
+        <DeleteIncomeModal
+          onClose={() => setShowModal("")}
+          income={selectedItem}
+        />
+      )}
+      {showModal === "editIncome" && (
+        <EditIncomeModal
+          onClose={() => setShowModal("")}
+          income={selectedItem}
+        />
       )}
 
       <DashboardHeader />
@@ -215,14 +233,14 @@ export default function Income() {
                         {income.source}
                       </div>
                       <div className="text-sm font-normal text-gray-500">
-                        {income.uid}
+                        {income.description}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap p-4 text-base font-medium text-gray-900">
-                      {income.amount}
+                      {income.amount} RON
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap p-4 text-base font-medium text-gray-900">
-                      {income.date_received.toString()}
+                      {new Date(income.date_received).toDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap p-4 text-base font-medium text-gray-900">
                       {income.frequency}
@@ -234,6 +252,10 @@ export default function Income() {
                 bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 focus:!ring-2 
                 p-0 font-medium rounded-lg"
                           type="button"
+                          onClick={() => {
+                            setSelectedItem(income);
+                            setShowModal("editIncome");
+                          }}
                         >
                           <span className="flex items-center rounded-md text-sm px-3 py-2">
                             <svg
@@ -261,6 +283,10 @@ export default function Income() {
                  focus:ring-red-300 disabled:hover:bg-red-800
                   focus:!ring-2 p-0 font-medium rounded-lg"
                           type="button"
+                          onClick={() => {
+                            setSelectedItem(income);
+                            setShowModal("deleteIncome");
+                          }}
                         >
                           <span className="flex items-center rounded-md text-sm px-3 py-2">
                             <svg

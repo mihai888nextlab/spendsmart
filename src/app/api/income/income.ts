@@ -7,6 +7,7 @@ connectDB();
 
 export async function addIncome(
   source: string,
+  description: string,
   amount: number,
   date_received: Date,
   frequency: string,
@@ -15,6 +16,7 @@ export async function addIncome(
   try {
     let income = new incomeModel({
       source,
+      description,
       amount,
       date_received,
       frequency,
@@ -30,10 +32,40 @@ export async function addIncome(
 export async function getIncomes(uid: string) {
   try {
     let incomes = await incomeModel.find({ uid });
-    console.log(incomes);
-    return incomes;
+    return JSON.stringify(incomes);
   } catch (error) {
     console.log(error);
     return null;
+  }
+}
+
+export async function deleteIncome(id: string) {
+  try {
+    await incomeModel.findByIdAndDelete(id);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updateIncome(
+  _id: string,
+  source: string,
+  description: string,
+  amount: number,
+  date_received: Date,
+  frequency: string,
+  uid: string
+) {
+  try {
+    await incomeModel.findByIdAndUpdate(_id, {
+      source,
+      description,
+      amount,
+      date_received,
+      frequency,
+      uid,
+    });
+  } catch (error) {
+    console.log(error);
   }
 }
